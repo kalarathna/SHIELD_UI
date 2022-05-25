@@ -1,0 +1,59 @@
+<div class="container-fluid py-3">
+  <div class="heading">Welcome To SHIELD</div>
+
+  <div class="row justify-content-center my-5">
+    <div class="col-4">
+      <form [formGroup]="reactiveForm" #form="ngForm">
+        <div class="row">
+          <div *ngIf = "loginErrFlag">
+              <div class="form-group">
+                  <div class = "col-md alert alert-danger">
+                      <span>{{loginErrDesc}}</span>
+                    </div>
+                  </div>
+          </div>
+          <div *ngIf = "httpErrorResp">
+              <div class="form-group">
+                  <div class = "col-md alert alert-danger">
+                      <span>Sorry. We are facing some technical issues. Please try again later</span>
+                    </div>
+                  </div>
+          </div>
+          </div>
+        <div class="row">
+          <div class="col mb-2">
+            <label for="userName" class="form-label">User Name:</label>
+            <input type="text" id="userName" name="userName" formControlName="userName" placeholder="User Name" required minlength="1" maxlength="250" class="form-control form-control-sm"
+                   [class.is-invalid]="userName.invalid && (userName.dirty || userName.touched)">
+            <div *ngIf="userName.invalid && (userName.dirty || userName.touched)" class="invalid-feedback">
+              <div *ngIf="userName.errors?.['required']">
+                This field is required.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col mb-2">
+            <label for="password" class="form-label">Password:</label>
+            <div class="input-group input-group-sm has-validation">
+              <input [type]="loginmodel.showPassword ? 'text' : 'password'" id="password" name="password" formControlName="password" required minlength="3" class="form-control form-control-sm" [class.is-invalid]="password.invalid && (password.dirty || password.touched)">
+              <!-- <button type="button" class="btn btn-outline-secondary" (click)="loginmodel.showPassword = !loginmodel.showPassword">
+                 <i [ngClass]="{'bi bi-eye-fill': !loginmodel.showPassword, 'bi bi-eye-slash-fill': loginmodel.showPassword}"></i> -->
+              <!-- </button> --> 
+              <div *ngIf="password.invalid && (password.dirty || password.touched)" class="invalid-feedback">
+                <div *ngIf="password.errors?.['required']">
+                  This field is required.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col mb-2 d-grid">
+            <button type="button" class="btn btn-sm btn-primary" (click)="login()">Login</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

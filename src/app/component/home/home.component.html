@@ -1,0 +1,155 @@
+<div class="container-fluid">
+<ng-container>
+  <div class="row">
+    <div class="col-md-2">
+      <p-button (onClick)="openModal(upload)" icon="pi pi-upload" iconPos="left"
+                label="Upload Documents"></p-button>
+    </div>
+    <div class="col-md-2">
+      <p-button (onClick)="openModal(newDocument)" icon="pi pi-plus" iconPos="left"
+                label="New Document"></p-button>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf = "saveFileErrFlag">
+        <div class="form-group">
+            <div class = "col-md alert alert-danger">
+                <span>{{saveFileErrDesc}}</span>
+              </div>
+            </div>
+    </div>
+    <div *ngIf = "saveFileSuccessFlag">
+      <div class="form-group">
+          <div class = "col-md alert alert-danger">
+              <span>{{saveFileSuccessDesc}}</span>
+            </div>
+          </div>
+      </div>
+    <div *ngIf = "httpErrorResp">
+        <div class="form-group">
+            <div class = "col-md alert alert-danger">
+                <span>Sorry. We are facing some technical issues. Please try again later</span>
+              </div>
+            </div>
+    </div>
+    </div>
+  <div class="row">
+    <p-table [value]="contentArray" [scrollable]="true">
+      <ng-template pTemplate="header">
+        <tr class="header-row">
+          <th style="width:250px">File Name</th>
+          <th style="width:250px">File Size</th>
+          <th style="width:250px">Expiry Date</th>
+          <th style="width:250px"></th>
+          <th style="width:250px"></th>
+          <th style="width:250px"></th>
+        </tr>
+      </ng-template>
+      <ng-template *ngFor="let content of contentArray"   pTemplate="body">
+        <tr class="data-row">
+          <span *ngFor="let file of content.fileNames">
+          <td  style="width:250px">{{file}}</td>
+          </span>
+          <span *ngFor="let filesize of content.fileSizes">
+          <td style="width:250px">{{filesize}}</td>
+            </span>
+          <td style="width:250px">
+            <div class="input-group">{{content.date}}</div>
+              <!-- <input class="form-control" placeholder="yyyy-mm-dd" -->
+                     <!-- name="dp" [(ngModel)]="expiryDate" > -->
+              <!-- <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+              </div> -->
+            <!-- </div> -->
+          </td>
+          <p-button  icon="pi pi-share-alt" iconPos="right" label="Share"></p-button>
+          <p-button (onClick)="deleteUploadedDocument(content.userDetailsId)" icon="pi pi-times" iconPos="right" label="Delete"></p-button>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</ng-container>
+</div>
+<ng-template #upload>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Upload Documents</h4>
+      <p-button (onClick)="closeModal()" class="cancel-button" icon="pi pi-times" iconPos="right"></p-button>
+    </div>
+    <div class="modal-body" style="margin: 20px">
+      <div class="content">
+        <!--<p-fileUpload (onUpload)="onUpload($event)" chooseLabel="Browse"
+                      maxFileSize="1000000" multiple="multiple" name="tableContent[]">
+            <ng-template pTemplate="content">
+                <ul *ngIf="selectedFiles.length">
+                    <li *ngFor="let file of selectedFiles">{{file.name}} - {{file.size}} bytes</li>
+                </ul>
+            </ng-template>
+        </p-fileUpload>-->
+        <input (change)="onChange($event)" class="p-inputtext-lg" multiple type="file">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div *ngIf="uploadedFiles.length > 0 ">
+        <p-button (onClick)="onUpload()" icon="pi pi-upload" iconPos="right" label="Upload"></p-button>
+      </div>
+      <p-button (onClick)="closeModal()" icon="pi pi-times" iconPos="right" label="Cancel"></p-button>
+    </div>
+  </div>
+</ng-template>
+<form (ngSubmit)="onSubmit()" [formGroup]="newDocumentForm">
+  <ng-template #newDocument>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add New Document</h4>
+        <p-button (onClick)="closeModal()" class="cancel-button" icon="pi pi-times" iconPos="right"></p-button>
+      </div>
+      <div class="modal-body" style="margin: 20px">
+        <div class="content">
+          <div class="form-group">
+            <input class="p-inputtext-lg" formControlName="documentName" pInputText
+                   placeholder="New Document Name"
+                   type="text">
+          </div>
+          <div class="form-group">
+                        <textarea formControlName="documentContent" pInputTextarea
+                                  placeholder="Type your content here!"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <p-button *ngIf="newDocumentForm.valid" (onClick)="saveNewDocument()" icon="pi pi-save" iconPos="right" label="Save"></p-button>
+        <p-button (onClick)="closeModal()" icon="pi pi-times" iconPos="right" label="Cancel"></p-button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #passwordNotification>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Password Notification</h4>
+        <p-button (onClick)="closeModal()" class="cancel-button" icon="pi pi-times" iconPos="right"></p-button>
+      </div>
+      <div class="modal-body" style="margin: 20px">
+        <div class="content">
+          <div class="form-group">
+            <input class="p-inputtext-lg" formControlName="documentName" pInputText
+                   placeholder="New Document Name"
+                   type="text">
+          </div>
+          <div class="form-group">
+                        <textarea formControlName="documentContent" pInputTextarea
+                                  placeholder="Type your content here!"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <p-button *ngIf="newDocumentForm.valid" (onClick)="saveNewDocument()" icon="pi pi-save" iconPos="right" label="Save"></p-button>
+        <p-button (onClick)="closeModal()" icon="pi pi-times" iconPos="right" label="Cancel"></p-button>
+      </div>
+    </div>
+  </ng-template>
+</form>
+
+

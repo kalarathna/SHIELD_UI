@@ -1,0 +1,112 @@
+<div class="container-fluid py-3">
+  <div class="row justify-content-center my-5">
+    <div class="col-4">
+      <form [formGroup]="reactiveForm" #form="ngForm">
+        <div class="row">
+          <div *ngIf = "signUpErrFlag">
+              <div class="form-group">
+                  <div class = "col-md alert alert-danger">
+                      <span>{{signUpErrDesc}}</span>
+                    </div>
+                  </div>
+          </div>
+          <div *ngIf = "httpErrorResp">
+              <div class="form-group">
+                  <div class = "col-md alert alert-danger">
+                      <span>Sorry. We are facing some technical issues. Please try again later</span>
+                    </div>
+                  </div>
+          </div>
+          </div>
+        <div class="row">
+          <div class="col mb-2">
+            <label for="firstName" class="form-label">First Name:</label>
+            <input type="text" id="firstName" name="firstName" formControlName="firstName" placeholder="please enter name" required minlength="1" maxlength="250" class="form-control form-control-sm"
+                   [class.is-invalid]="firstName.invalid && (firstName.dirty || firstName.touched)">
+            <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="invalid-feedback">
+              <div *ngIf="firstName.errors?.['required']">
+                This field is required.
+              </div>
+              <div *ngIf="firstName.errors?.['minlength']">
+                This field must have at least 1 character.
+              </div>
+              <div *ngIf="firstName.errors?.['maxlength']">
+                This field must have at most 250 characters.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col mb-2">
+            <label for="lastName" class="form-label">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" formControlName="lastName" placeholder="please enter lastname" maxlength="10" class="form-control form-control-sm"
+                   [class.is-invalid]="lastName.invalid && (lastName.dirty || lastName.touched)">
+            <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="invalid-feedback">
+              <div *ngIf="lastName.errors?.['maxlength']">
+                This field must have at most 10 characters.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col mb-2">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" id="email" name="email" formControlName="email" placeholder="name@gmail.com" required minlength="1" maxlength="250" class="form-control form-control-sm" [class.is-invalid]="email.invalid && (email.dirty || email.touched)">
+            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="invalid-feedback">
+              <div *ngIf="email.errors?.['required']">
+                This field is required.
+              </div>
+              <div *ngIf="email.errors?.['minlength']">
+                This field must have at least 1 character.
+              </div>
+              <div *ngIf="email.errors?.['maxlength']">
+                This field must have at most 250 characters.
+              </div>
+              <div *ngIf="!email.errors?.['required'] && !email.errors?.['minlength'] && !email.errors?.['maxlength'] && email.errors?.['emailValidator']">
+                Invalid email format.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col mb-2">
+            <label for="organisationName" class="form-label">Organisation Name:</label>
+            <input type="text" id="organisationName" name="organisationName" formControlName="organisationName" placeholder="please enter organisationName" maxlength="250" class="form-control form-control-sm">
+<!-- [class.is-invalid]="organisationName.invalid && (organisationName.dirty || organisationName.touched)"> -->
+            <!-- <div *ngIf="organisationName.invalid && (organisationName.dirty || organisationName.touched)" class="invalid-feedback">
+              <div *ngIf="organisationName.errors?.['maxlength']">
+                This field must have at most 10 characters.
+              </div>
+            </div> -->
+          </div>
+        </div>
+
+        
+        <div class="row">
+          <div class="col mb-2">
+            <label for="password" class="form-label">Password:</label>
+            <div class="input-group input-group-sm has-validation">
+              <input [type]="signupModel.showPassword ? 'text' : 'password'" id="password" name="password" formControlName="password" required minlength="5" class="form-control form-control-sm" [class.is-invalid]="password.invalid && (password.dirty || password.touched)">
+              <!-- <button type="button" class="btn btn-outline-secondary" (click)="signupModel.showPassword = !signupModel.showPassword">
+                <i class="bi" [ngClass]="{'bi-eye-fill': !signupModel.showPassword, 'bi-eye-slash-fill': signupModel.showPassword}"></i>
+              </button> -->
+              <div *ngIf="password.invalid && (password.dirty || password.touched)" class="invalid-feedback">
+                <div *ngIf="password.errors?.['required']">
+                  This field is required.
+                </div>
+                <div *ngIf="password.errors?.['minlength']">
+                  This field must have at least 15 characters.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col mb-2 d-grid">
+            <button type="button" class="btn btn-sm btn-primary" (click)="register()">Register</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
