@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
   reactiveForm!: FormGroup;
   httpErrorResp = false;
   logoutFlag:any;
+  setQrImageUrl:any;
   // user: IUser;
   loginmodel: LoginModel= new LoginModel();
 
@@ -62,14 +63,14 @@ export class LoginComponent implements OnInit {
     else{
       this.loginmodel = this.reactiveForm.value;
       this.dataservice.login(this.loginmodel).subscribe(response =>{
-        console.log(response);
         if (!response.errorFlg) {
-          sessionStorage.setItem('firstName',response.firstName);
-          sessionStorage.setItem('userUuid',response.uuid);
-          sessionStorage.setItem('token',response.token);
-          sessionStorage.setItem('userName',response.userName);
-          this.logoutFlag=true;
-          this.router.navigate(['/home']);
+          this.setQrImageUrl=response.secretImageURI;
+          // sessionStorage.setItem('firstName',response.firstName);
+          // sessionStorage.setItem('userUuid',response.uuid);
+          // sessionStorage.setItem('token',response.token);
+          // sessionStorage.setItem('userName',response.userName);
+          // this.logoutFlag=true;
+          this.router.navigate(['qrcode',this.setQrImageUrl]);
         }
         else{
           this.loginErrFlag = response.errorFlg;
@@ -85,9 +86,6 @@ export class LoginComponent implements OnInit {
       )
 
     }
-    // https://stackoverflow.com/questions/66313615/how-to-navigate-to-the-home-page-from-login-after-successful-login-with-credenti
-
-
     console.info('userName:', this.loginmodel.userName);
     //console.info('Password:', this.loginmodel.password);
   }

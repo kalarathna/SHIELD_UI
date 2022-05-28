@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   userContent: UserContent= new UserContent();
   files: File[] = [];
   submitted = false;
-  logoutFlag:any;
+  logoutFlag=false;
   public searchResultList: any = [];
   public listSize: number;
   public noResult = false;
@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit {
 
   constructor(private modalService: BsModalService, private fb: FormBuilder,
     private router: Router, private dataservice:DataService, private route: ActivatedRoute) {
+    this.logoutFlag=this.route.snapshot.params['logoutFlag'];
   }
 
   get documentName() {

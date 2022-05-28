@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { registerLocaleData } from '@angular/common';
 import { SignUpModel } from '../model/signUpModel';
 import { UserContent } from '../model/userContent';
+import {OtpModel} from "../model/otpModel";
 
 @Injectable({
   providedIn: 'root'
@@ -78,14 +79,16 @@ export class DataService {
 
     }
 
-  authenticateOtp(userName: any, otp:string):Observable<any>{
+  authenticateOtp(otpModel:OtpModel):Observable<any>{
+    console.log("inside data service "+otpModel.userName);
+    console.log(otpModel.otpCode);
     const headers = new HttpHeaders().set('content-type', 'application/json');
-    let params= new HttpParams();
-    params.append('userName', userName);
-    params.append('code',otp);
+    // let params= new HttpParams();
+    // params.append('userName', userName);
+    // params.append('code',otp);
     return this.httpClient.post(
-      this.hostverifyOTP, userName, {
-        headers, params
+      this.hostverifyOTP,  otpModel,{
+        headers
       });
 
   }

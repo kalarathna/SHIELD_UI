@@ -13,6 +13,7 @@ const routes: Routes = [
   {path:'login', component: LoginComponent,canActivate: [AuthGuardGuard]},
   {path:'signup', component: SignupComponent},
    {path:'home', component: HomeComponent},
+  {path:'home/:logoutFlag', component: HomeComponent},
    {path:'qrcode', component: QrcodeComponent},
    {path:'qrcode/:setQrImageUrl', component: QrcodeComponent},
   {path:'password',component:PasswordnotifictaionComponent},

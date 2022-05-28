@@ -13,10 +13,11 @@
         <a class="nav-link" href="/signup">sinup</a>
       </span> -->
       </ul>
-      
-      <!-- <span class="navbar-text">
-        <a class="nav-link" href="/logout">logout</a>
-      </span> -->
+
+       <span *ngIf="loggedIn" class="navbar-text">
+         <p>Welcome {{firstName}}</p>
+        <a class="nav-link" href="/logout">Logout</a>
+      </span>
     </div>
   </div>
 </nav>

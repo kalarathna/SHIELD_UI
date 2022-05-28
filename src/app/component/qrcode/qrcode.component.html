@@ -27,7 +27,7 @@
         </div>
         <div class="row">
           <div class="col mb-2">
-            <label for="otp" class="form-label">Please enter OTP:</label>
+            <label class="form-label">Please enter OTP:</label>
             <input type="text" id="otp" name="otpCode" formControlName="otpCode" placeholder="OTP" required minlength="1" maxlength="6" class="form-control form-control-sm"
                    [class.is-invalid]="otpCode.invalid && (otpCode.dirty || otpCode.touched)">
             <div *ngIf="otpCode.invalid && (otpCode.dirty || otpCode.touched)" class="invalid-feedback">
