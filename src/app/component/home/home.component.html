@@ -9,6 +9,10 @@
       <p-button (onClick)="openModal(newDocument)" icon="pi pi-plus" iconPos="left"
                 label="New Document"></p-button>
     </div>
+    <div class="col-md-3">
+      <p-button (onClick)="getAllPasswordList()"
+                label="Password Notification"></p-button>
+    </div>
   </div>
   <div class="row">
     <div *ngIf = "saveFileErrFlag">
@@ -25,6 +29,42 @@
             </div>
           </div>
       </div>
+    <div *ngIf = "uploadStatusFlag">
+    <div class="form-group">
+      <div class = "col-md alert alert-danger">
+        <span>{{uploadSuccessMsg}}</span>
+      </div>
+    </div>
+  </div>
+    <div *ngIf = "saveFileStatusFlag">
+      <div class="form-group">
+        <div class = "col-md alert alert-danger">
+          <span>{{documentSuccessMsg}}</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf = "passwordStatusFlag">
+      <div class="form-group">
+        <div class = "col-md alert alert-danger">
+          <span>{{passwordSaveMsg}}</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf = "shareStatusFlag">
+      <div class="form-group">
+        <div class = "col-md alert alert-danger">
+          <span>{{shareSuccessMsg}}</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf = "deleteStatusFlag">
+      <div class="form-group">
+        <div class = "col-md alert alert-danger">
+          <span>{{deleteMsg}}</span>
+        </div>
+      </div>
+    </div>
+
     <div *ngIf = "httpErrorResp">
         <div class="form-group">
             <div class = "col-md alert alert-danger">
@@ -33,7 +73,8 @@
             </div>
     </div>
     </div>
-  <div class="row">
+
+  <div class="row" *ngIf="!passwdNotification">
     <p-table [value]="contentArray" [scrollable]="true">
       <ng-template pTemplate="header">
         <tr class="header-row">
@@ -45,32 +86,66 @@
           <th style="width:250px"></th>
         </tr>
       </ng-template>
-      <ng-template *ngFor="let content of contentArray"   pTemplate="body">
+      <ng-template pTemplate="body" let-content >
         <tr class="data-row">
-          <span *ngFor="let file of content.fileNames">
-          <td  style="width:250px">{{file}}</td>
-          </span>
-          <span *ngFor="let filesize of content.fileSizes">
-          <td style="width:250px">{{filesize}}</td>
-            </span>
+          <span >
+           <td  style="width:250px"  >{{content.fileName}}</td>
+          <td style="width:250px">{{content.fileSizes}}</td>
           <td style="width:250px">
-            <div class="input-group">{{content.date}}</div>
-              <!-- <input class="form-control" placeholder="yyyy-mm-dd" -->
-                     <!-- name="dp" [(ngModel)]="expiryDate" > -->
-              <!-- <div class="input-group-append">
-                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-              </div> -->
-            <!-- </div> -->
+           {{content.fileExpiryDate }}
           </td>
-          <p-button  icon="pi pi-share-alt" iconPos="right" label="Share"></p-button>
-          <p-button (onClick)="deleteUploadedDocument(content.userDetailsId)" icon="pi pi-times" iconPos="right" label="Delete"></p-button>
+            </span>
+          <p-button  (onClick)= "openModelShare(shareEmail,content.userContentId)" icon="pi pi-share-alt" iconPos="right" label="Share"></p-button>
+          <p-button (onClick)="deleteUploadedDocument(content.userContentId)" icon="pi pi-times" iconPos="right" label="Delete"></p-button>
+          <p-button (onClick)="downloadDocument(content.userContentId)"  iconPos="right" label="Download"></p-button>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="row" *ngIf="passwdNotification">
+    <form (ngSubmit)="onSubmit()" [formGroup]="newPasswordForm">
+        <div class="row" style="padding-top:27px; padding-bottom:20px;">
+          <div class="col-md-3">
+            <label  class="form-label">Application Name:</label></div>
+          <input class="p-inputtext-sm" pInputText
+                 placeholder="Application Name"
+                 type="text" style="width:auto" formControlName="applicationName">
+        </div>
+
+        <div class="row">
+          <div class="col-md-3" >
+            <label class="form-label">Expiry Date:</label></div>
+          <div class="col-md-5" style="padding-left:0px;"> <p-calendar  formControlName="creationDate" dateFormat="dd.mm.yy"></p-calendar></div>
+        </div>
+    <p-button (onClick)="savePasswordNotification()" icon="pi pi-save" iconPos="right" label="Save"></p-button>
+    </form>
+    <p-table [value]="passwordResultsList" [scrollable]="true">
+      <ng-template pTemplate="header">
+        <tr class="header-row">
+          <th style="width:250px">Application Name</th>
+          <th style="width:250px">Creation Date</th>
+          <th style="width:250px">Expiry Date</th>
+          <th style="width:250px"></th>
+          <th style="width:250px"></th>
+          <th style="width:250px"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-content >
+        <tr class="data-row">
+          <span >
+           <td  style="width:250px"  >{{content.applicationName}}</td>
+          <td style="width:250px">{{content.creationDate}}</td>
+          <td style="width:250px">
+           {{content.expiryDate }}
+          </td>
+            </span>
         </tr>
       </ng-template>
     </p-table>
   </div>
 </ng-container>
 </div>
-<ng-template #upload>
+<ng-template #upload (ngSubmit)="onSubmit()" [formGroup]="newUploadForm">
   <div class="modal-content">
     <div class="modal-header">
       <h4 class="modal-title">Upload Documents</h4>
@@ -78,20 +153,28 @@
     </div>
     <div class="modal-body" style="margin: 20px">
       <div class="content">
-        <!--<p-fileUpload (onUpload)="onUpload($event)" chooseLabel="Browse"
-                      maxFileSize="1000000" multiple="multiple" name="tableContent[]">
-            <ng-template pTemplate="content">
-                <ul *ngIf="selectedFiles.length">
-                    <li *ngFor="let file of selectedFiles">{{file.name}} - {{file.size}} bytes</li>
-                </ul>
-            </ng-template>
-        </p-fileUpload>-->
-        <input (change)="onChange($event)" class="p-inputtext-lg" multiple type="file">
+        <div class="row">
+          <div class="col-md-3">
+            <label  class="form-label">Upload File Name:</label></div>
+          <div class="col-md-5">
+            <input class="p-inputtext-lg" formControlName="uploadDocumentName" pInputText
+                   placeholder="New Document Name"
+                   type="text" >
+          </div>
+        </div>
+        <input (change)="onChange($event)" formControlName="uploadFile" class="p-inputtext-lg" multiple type="file" style="padding-bottom: 31px;">
+
+
+        <div class="row">
+          <div class="col-md-3">
+          <label  class="form-label">Expiry Date:</label></div>
+         <div class="col-md-5"> <p-calendar formControlName="uploadExpiryDate" dateFormat="dd.mm.yy"></p-calendar></div>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
       <div *ngIf="uploadedFiles.length > 0 ">
-        <p-button (onClick)="onUpload()" icon="pi pi-upload" iconPos="right" label="Upload"></p-button>
+        <p-button (onClick)="onUpload() "icon="pi pi-upload" iconPos="right" label="Upload"></p-button>
       </div>
       <p-button (onClick)="closeModal()" icon="pi pi-times" iconPos="right" label="Cancel"></p-button>
     </div>
@@ -106,41 +189,30 @@
       </div>
       <div class="modal-body" style="margin: 20px">
         <div class="content">
-          <div class="form-group">
+          <div class="form-group" style="padding-bottom: 30px;">
+            <div class="row">
+              <div class="col-md-5">
+                <label  class="form-label">Document Name:</label></div>
             <input class="p-inputtext-lg" formControlName="documentName" pInputText
                    placeholder="New Document Name"
-                   type="text">
+                   type="text" >
+            </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" style="padding-bottom: 31px;">
+            <div class="row">
+              <div class="col-md-5">
+                <label  class="form-label">Document Content:</label></div>
                         <textarea formControlName="documentContent" pInputTextarea
                                   placeholder="Type your content here!"></textarea>
+            </div>
+          </div>
+          <div class="form-group" style="padding-bottom: 31px;">
+          <div class="row">
+            <div class="col-md-3">
+              <label  class="form-label">Expiry Date:</label></div>
+            <div class="col-md-5"> <p-calendar formControlName="expiryDate" dateFormat="dd.mm.yy"></p-calendar></div>
           </div>
         </div>
-      </div>
-
-      <div class="modal-footer">
-        <p-button *ngIf="newDocumentForm.valid" (onClick)="saveNewDocument()" icon="pi pi-save" iconPos="right" label="Save"></p-button>
-        <p-button (onClick)="closeModal()" icon="pi pi-times" iconPos="right" label="Cancel"></p-button>
-      </div>
-    </div>
-  </ng-template>
-  <ng-template #passwordNotification>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Password Notification</h4>
-        <p-button (onClick)="closeModal()" class="cancel-button" icon="pi pi-times" iconPos="right"></p-button>
-      </div>
-      <div class="modal-body" style="margin: 20px">
-        <div class="content">
-          <div class="form-group">
-            <input class="p-inputtext-lg" formControlName="documentName" pInputText
-                   placeholder="New Document Name"
-                   type="text">
-          </div>
-          <div class="form-group">
-                        <textarea formControlName="documentContent" pInputTextarea
-                                  placeholder="Type your content here!"></textarea>
-          </div>
         </div>
       </div>
 
@@ -151,5 +223,34 @@
     </div>
   </ng-template>
 </form>
+<ng-template #shareEmail (ngSubmit)="onSubmit()" [formGroup]="newShareForm">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Provide Email Address to share</h4>
+      <p-button (onClick)="closeModal()" class="cancel-button" icon="pi pi-times" iconPos="right"></p-button>
+    </div>
+    <div class="modal-body" style="margin: 20px">
+      <div class="content">
+        <div class="row">
+          <div class="col-md-3">
+            <label  class="form-label">Email Address:</label></div>
+          <div class="col-md-5">
+            <input class="p-inputtext-lg" formControlName="shareEmail" pInputText
+                   placeholder="New Document Name"
+                   type="text" >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div >
+        <p-button (onClick)="shareContent() "icon="pi pi-share-alt" iconPos="right" label="Share"></p-button>
+      </div>
+      <p-button (onClick)="closeModal()" icon="pi pi-times" iconPos="right" label="Cancel"></p-button>
+    </div>
+  </div>
+</ng-template>
+
+
 
 

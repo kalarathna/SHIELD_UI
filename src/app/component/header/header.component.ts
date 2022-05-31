@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { isUndefined, isNullOrUndefined } from 'is-what';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -10,18 +11,23 @@ export class HeaderComponent implements OnInit {
 
    loggedIn=false;
    firstName:string|null;
-  constructor() { if (!isNullOrUndefined(sessionStorage.getItem('userName'))) {
-    this.loggedIn = true;
-    if (!isNullOrUndefined(sessionStorage.getItem('firstName'))) {
-      this.firstName = sessionStorage.getItem('firstName');
-    }
-  }}
+  constructor(private router:Router) {
+  }
 
 
   ngOnInit(): void {
+    if (!isNullOrUndefined(sessionStorage.getItem('userName'))) {
+      this.loggedIn = true;
+      if (!isNullOrUndefined(sessionStorage.getItem('firstName'))) {
+        this.firstName = sessionStorage.getItem('firstName');
+
+      }
+    }
   }
 
   logOut():void{
     window.sessionStorage.clear();
+    this.loggedIn=false;
+    this.router.navigate(['login'])
   }
 }

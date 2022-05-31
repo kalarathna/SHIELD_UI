@@ -18,7 +18,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {InputTextareaModule} from "primeng/inputtextarea";
 import {TableModule} from "primeng/table";
 import {BsModalRef, BsModalService, ModalModule} from "ngx-bootstrap/modal";
- import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {CalendarModule} from "primeng/calendar";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PasswordnotifictaionComponent } from './component/passwordnotifictaion/passwordnotifictaion.component';
 
 
@@ -41,15 +42,15 @@ import { PasswordnotifictaionComponent } from './component/passwordnotifictaion/
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    ReactiveFormsModule,
     FormsModule,
+    ReactiveFormsModule,
     InputTextModule,
     FileUploadModule,
     HttpClientModule,
     ModalModule.forRoot(),
     InputTextareaModule,
     TableModule,
-
+    CalendarModule,
 
   ],
   providers: [BsModalRef, BsModalService],

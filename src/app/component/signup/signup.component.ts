@@ -92,11 +92,13 @@ export class SignupComponent implements OnInit {
       this.dataservice.registerNewUser(this.signupModel).subscribe(response =>{
         if (!response.errorFlg) {
           this.setQrImageUrl=response.secretImageURI;
+          sessionStorage.setItem('userName',response.userName);
           sessionStorage.setItem('firstName',response.firstName);
           sessionStorage.setItem('userUuid',response.uuid);
           sessionStorage.setItem('token',response.token);
+
           this.logoutFlag=true;
-          console.log(this.router.navigate(['qrcode',this.setQrImageUrl]));
+          //this.router.navigate(['login']);
           this.router.navigate(['qrcode',this.setQrImageUrl]);
         }
         else{

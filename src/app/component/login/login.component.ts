@@ -65,10 +65,10 @@ export class LoginComponent implements OnInit {
       this.dataservice.login(this.loginmodel).subscribe(response =>{
         if (!response.errorFlg) {
           this.setQrImageUrl=response.secretImageURI;
-          // sessionStorage.setItem('firstName',response.firstName);
-          // sessionStorage.setItem('userUuid',response.uuid);
-          // sessionStorage.setItem('token',response.token);
-          // sessionStorage.setItem('userName',response.userName);
+          sessionStorage.setItem('firstName',response.firstName);
+          sessionStorage.setItem('userUuid',response.uuid);
+          sessionStorage.setItem('token',response.token);
+          sessionStorage.setItem('userName',response.userName);
           // this.logoutFlag=true;
           this.router.navigate(['qrcode',this.setQrImageUrl]);
         }

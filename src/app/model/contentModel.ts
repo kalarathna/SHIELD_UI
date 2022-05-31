@@ -1,10 +1,13 @@
+import {FileDetails} from "./FileDetails";
+
 export class ContentModel{
 
-  public documentName: string;
-  public uploadFileName: string;
-  public fileSize: string;
-  public documentSize:string;
-  public userContentId:string;
-  public userName: string;
+    public userName:string;
+    public userContentID:string;
+  public fileDetails: any = [];
+    //public fileDetails:Array<FileDetails>;
+
+
+
 
 }

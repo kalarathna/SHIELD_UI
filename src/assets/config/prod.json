@@ -1,0 +1,18 @@
+{
+  "HOST_API":"http://shield.us-east-1.elasticbeanstalk.com",
+  "APP_VERSION": "1.0",
+  "API_ENDPOINTS": {
+    "hostLoginApi" : "/shield/login",
+    "hostsignupApi" : "/shield/createuser",
+    "hostSaveDocument" : "/shield/savefile",
+    "hostUploadDocument" : "/shield/uploadfile",
+    "hostEmailAPI" : "/shield/sendemail",
+    "hostGetContent" : "/shield/getcontent",
+    "hostverifyOTP" : "/shield/verifyOTP",
+    "hostDownload" : "/shield/downloadcontent",
+    "hostDeleteAPI" : "/shield/deletefile",
+    "hostSavePassword":"/shield/savepassword",
+    "hostGetAllPassword":"/shield/getplist",
+    "hostShareContent":"/shield/sharecontent"
+  }
+}
